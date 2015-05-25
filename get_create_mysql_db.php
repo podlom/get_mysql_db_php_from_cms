@@ -55,41 +55,68 @@ if (file_exists($configFile)) {
 		}
 	}
 	if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
-		// [ get version
 		$versionFile = $dirName . DIRECTORY_SEPARATOR . '/wp-includes/version.php';
-		require_once($versionFile);
-		// ]
+		require_once $versionFile;
 		echo '/* Detected WordPress CMS version '  . $wp_version . ' */' . PHP_EOL;
 		$disPlayResults = 1;
 	}
 } else {
 	// Drupal ?
 	$configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/default/settings.php';
-	require_once $configFile;
-	if (isset($db_url)) {
-		// Drupal 6 ?
-		echo '/* Detected Drupal 6 */' . PHP_EOL;
-		$ap1 = parse_url($db_url);
-		// echo 'Parsed URL: ' . var_export($ap1, 1) . PHP_EOL;
-		$dbName = substr($ap1['path'], 1);
-		$dbUser = $ap1['user'];
-		$dbHost = $ap1['host'];
-		$dbPass = $ap1['pass'];
-		if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
-			$disPlayResults = 1;
-		}
-	} else {
-		if (isset($databases)) {
-			// Drupal 7 ?
-			echo '/* Detected Drupal 7 */' . PHP_EOL;
-			$dbName = $databases['default']['default']['database'];
-			$dbUser = $databases['default']['default']['username'];
-			$dbHost = $databases['default']['default']['host'];
-			$dbPass = $databases['default']['default']['password'];
+	if (file_exists($configFile)) {
+		require_once $configFile;
+		if (isset($db_url)) {
+			// Drupal 6 ?
+			echo '/* Detected Drupal 6 */' . PHP_EOL;
+			$ap1 = parse_url($db_url);
+			// echo 'Parsed URL: ' . var_export($ap1, 1) . PHP_EOL;
+			$dbName = substr($ap1['path'], 1);
+			$dbUser = $ap1['user'];
+			$dbHost = $ap1['host'];
+			$dbPass = $ap1['pass'];
 			if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
-				$disPlayResults = 1;	
+				$disPlayResults = 1;
 			}
+		} else {
+			if (isset($databases)) {
+				// Drupal 7 ?
+				echo '/* Detected Drupal 7 */' . PHP_EOL;
+				$dbName = $databases['default']['default']['database'];
+				$dbUser = $databases['default']['default']['username'];
+				$dbHost = $databases['default']['default']['host'];
+				$dbPass = $databases['default']['default']['password'];
+				if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
+					$disPlayResults = 1;	
+				}
+			}	
 		}	
+	}
+	// Joomla! CMS?
+	$configFile = $dirName . DIRECTORY_SEPARATOR . 'configuration.php';
+	if (file_exists($configFile)) {
+		require_once $configFile;
+		// Joomla!
+		$jc1 = new JConfig;
+		$version = $versionTxt = '';
+		$verFile = $dirName . DIRECTORY_SEPARATOR . 'libraries/cms/version/version.php';
+		if (file_exists($verFile)) {
+			define('_JEXEC', 1);
+			require_once $verFile;
+			$jv1 = new JVersion;
+			$version = $jv1->RELEASE;
+		}
+		if (strlen($version) > 0) {
+			$versionTxt = 'version: ' . $version;
+		}
+		echo '/* Detected Joomla! CMS ' . $versionTxt . ' */' . PHP_EOL;
+		//
+		$dbHost =$jc1->host;
+		$dbUser = $jc1->user;
+		$dbPass = $jc1->password;
+		$dbName = $jc1->db;
+		if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
+			$disPlayResults = 1;	
+		}
 	}
 }
 
