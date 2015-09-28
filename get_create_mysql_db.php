@@ -110,12 +110,41 @@ if (file_exists($configFile)) {
 		}
 		echo '/* Detected Joomla! CMS ' . $versionTxt . ' */' . PHP_EOL;
 		//
-		$dbHost =$jc1->host;
+		$dbHost = $jc1->host;
 		$dbUser = $jc1->user;
 		$dbPass = $jc1->password;
 		$dbName = $jc1->db;
 		if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
 			$disPlayResults = 1;	
+		}
+	}
+	// Magento ?
+	$configFile = $dirName . DIRECTORY_SEPARATOR . 'app/etc/local.xml';
+	if (file_exists($configFile)) {
+		if (!function_exists('simplexml_load_file')) {
+			echo 'Error: can`t work without simplexml_load_file function. Please install SimpleExml support in PHP.' . PHP_EOL;
+			exit;
+		}
+		$xmlConfig = simplexml_load_file($configFile);
+		$conn = $xmlConfig->global->resources->default_setup->connection;
+		$dbHost = (string) $conn->host;
+		$dbUser = (string) $conn->username;
+		$dbPass = (string) $conn->password;
+		$dbName = (string) $conn->dbname;
+		//		
+		if (strlen($dbName) > 0 && strlen($dbUser) > 0 && strlen($dbPass) > 0) {
+			$disPlayResults = 1;	
+		}
+		//
+		$verFile = $dirName . DIRECTORY_SEPARATOR . 'app/Mage.php';
+		if (file_exists($verFile)) {
+			require_once($verFile);
+			$version = Mage::getVersion();
+			$versionTxt = '';
+			if (strlen($version) > 0) {
+				$versionTxt = 'version: ' . $version;
+			}
+			echo '/* Detected Magento ' . $versionTxt . ' */' . PHP_EOL;
 		}
 	}
 }
