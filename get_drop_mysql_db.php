@@ -165,14 +165,13 @@ if (file_exists($configFile)) {
 $sSql = '';
 $numDbs = 0;
 foreach ($dbs as $db) {
-    $sSql .= 'CREATE DATABASE `' . $db['name'] . '` /*!40100 DEFAULT CHARACTER SET utf8 */;' . PHP_EOL . 
-    'GRANT ALL ON `' . $db['name'] . '`.* TO ' . "'" . $db['user']. 
-    "'@'" . $db['host'] . "'" . ' IDENTIFIED BY ' . "'" . $db['pass'] . "'" . ';' . PHP_EOL;
+    $sSql .= 'DROP DATABASE `' . $db['name'] . '`;' . PHP_EOL . 
+    'DROP USER ' . "'" . $db['user'] . "'@'" . $db['host'] . "'" . ';' . PHP_EOL;
     ++ $numDbs;
 }
-$sHead = 'Set up user and database script is:';
+$sHead = 'Drop database & user SQL script is:';
 if ($numDbs > 1) {
-    $sHead = 'Set up users and databases script is:';
+    $sHead = 'Drop databases & users SQL script is:';
 }
 $msgTemplate =<<<EOM
 
