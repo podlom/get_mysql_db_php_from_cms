@@ -19,5 +19,5 @@ Generate .my.cnf configuration file from MySQL settings to use instead of creden
 
 Usage:
 ```
-$ php get_create_mysql_db.php get_create_my_cnf.php
+$ php get_create_my_cnf.php /home/taras/public_html
 ```
