@@ -3,18 +3,29 @@
 /**
  * Detect popular CMS MySQL database settings and output set up DB and User script
  *
- * @author Taras Shkodenko <taras@shkodenko.com>
+ * PHP version 5
+ *
+ * @category PHP_CLI_Scripts
+ * @package  Get_Drop_Mysql_Db
+ * @author   Taras Shkodenko <taras@shkodenko.com>
+ * @license  GNU GENERAL PUBLIC LICENSE Version 2
+ * @link     http://www.shkodenko.com/
  */
 
 $dirName = '';
 
+/**
+ * Display script usage
+ *
+ * @return void
+ */
 function plmUsage() 
 {
     echo "Script usage: php -f " . __FILE__ . " '/path/to/folder'" . PHP_EOL;
 }
 
-if(isset($argv[1]) ) {
-    if(strlen($argv[1]) > 0 ) {
+if (isset($argv[1])) {
+    if (strlen($argv[1]) > 0) {
         $dirName = $argv[1];
     } else {
         plmUsage();
@@ -41,7 +52,7 @@ if (file_exists($configFile)) {
     $fileLines = file($configFile);
     $numConfigLines = count($fileLines);
     if ($numConfigLines > 0) {
-        foreach($fileLines as $line1) {
+        foreach ($fileLines as $line1) {
             if (preg_match("/define\('DB_HOST', '(.+)'\);/m", $line1, $m3)) {
                 $dbs[0]['host'] = $m3[1];
             }
@@ -56,7 +67,10 @@ if (file_exists($configFile)) {
             }
         }
     }
-    if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
+    if (strlen($dbs[0]['name']) > 0 
+        && strlen($dbs[0]['user']) > 0 
+        && strlen($dbs[0]['pass']) > 0
+    ) {
         $versionFile = $dirName . DIRECTORY_SEPARATOR . '/wp-includes/version.php';
         include_once $versionFile;
         echo '/* Detected WordPress CMS version '  . $wp_version . ' */' . PHP_EOL;
@@ -76,7 +90,10 @@ if (file_exists($configFile)) {
             $dbs[0]['name'] = substr($ap1['path'], 1);
             $dbs[0]['user'] = $ap1['user'];
             $dbs[0]['pass'] = $ap1['pass'];
-            if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
+            if (strlen($dbs[0]['name']) > 0 
+                && strlen($dbs[0]['user']) > 0 
+                && strlen($dbs[0]['pass']) > 0
+            ) {
                 $disPlayResults = 1;
             }
         } else {
@@ -98,7 +115,10 @@ if (file_exists($configFile)) {
                     $dbs[0]['user'] = $databases['default']['default']['username'];
                     $dbs[0]['pass'] = $databases['default']['default']['password'];
                 }
-                if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
+                if (strlen($dbs[0]['name']) > 0 
+                    && strlen($dbs[0]['user']) > 0 
+                    && strlen($dbs[0]['pass']) > 0
+                ) {
                     $disPlayResults = 1;    
                 }
             }    
@@ -111,7 +131,8 @@ if (file_exists($configFile)) {
         // Joomla!
         $jc1 = new JConfig;
         $version = $versionTxt = '';
-        $verFile = $dirName . DIRECTORY_SEPARATOR . 'libraries/cms/version/version.php';
+        $verFile = $dirName . DIRECTORY_SEPARATOR .
+         'libraries/cms/version/version.php';
         if (file_exists($verFile)) {
             define('_JEXEC', 1);
             include_once $verFile;
@@ -127,7 +148,10 @@ if (file_exists($configFile)) {
         $dbs[0]['name'] = $jc1->db;
         $dbs[0]['user'] = $jc1->user;
         $dbs[0]['pass'] = $jc1->password;
-        if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
+        if (strlen($dbs[0]['name']) > 0 
+            && strlen($dbs[0]['user']) > 0 
+            && strlen($dbs[0]['pass']) > 0
+        ) {
             $disPlayResults = 1;    
         }
     }
@@ -135,7 +159,8 @@ if (file_exists($configFile)) {
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'app/etc/local.xml';
     if (file_exists($configFile)) {
         if (!function_exists('simplexml_load_file')) {
-            echo 'Error: can`t work without simplexml_load_file function. Please install SimpleExml support in PHP.' . PHP_EOL;
+            echo 'Error: can`t work without simplexml_load_file function.' . 
+                ' Please install SimpleExml support in PHP.' . PHP_EOL;
             exit;
         }
         $xmlConfig = simplexml_load_file($configFile);
@@ -145,7 +170,10 @@ if (file_exists($configFile)) {
         $dbs[0]['user'] = (string) $conn->username;
         $dbs[0]['pass'] = (string) $conn->password;
         //		
-        if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
+        if (strlen($dbs[0]['name']) > 0 
+            && strlen($dbs[0]['user']) > 0 
+            && strlen($dbs[0]['pass']) > 0
+        ) {
             $disPlayResults = 1;    
         }
         //
