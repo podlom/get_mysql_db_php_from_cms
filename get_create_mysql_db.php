@@ -67,6 +67,7 @@ if (file_exists($configFile)) {
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/default/settings.php';
     if (file_exists($configFile)) {
         include_once $configFile;
+        echo '/* Loaded default config file ' . $configFile . ' */' . PHP_EOL;
         if (isset($db_url)) {
             // Drupal 6 ?
             echo '/* Detected Drupal 6 */' . PHP_EOL;
@@ -97,6 +98,44 @@ if (file_exists($configFile)) {
                     $dbs[0]['name'] = $databases['default']['default']['database'];
                     $dbs[0]['user'] = $databases['default']['default']['username'];
                     $dbs[0]['pass'] = $databases['default']['default']['password'];
+                }
+                $multisiteConfig = $dirName . DIRECTORY_SEPARATOR . 'sites/sites.php';
+                if (file_exists($multisiteConfig)) {
+                    include_once $multisiteConfig;
+                    echo '/* Loaded Drupal multisite config file ' . $multisiteConfig . ' */' . PHP_EOL;
+                    if (is_array($sites) && (count($sites) > 0)) {
+                        $j = 0;
+                        foreach ($sites as $domain => $configFolder) {
+                            $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/' . $configFolder . '/settings.php';
+                            if (file_exists($configFile)) {
+                                include_once $configFile;
+                                echo '/* Loaded config file ' . $configFile . ' for (sub)domain ' . $domain . ' */' . PHP_EOL;
+                                //
+                                if (count($databases > 0)) {
+                                    foreach ($databases as $aDb) {
+                                        if (($dbs[0]['host'] !== $aDb['default']['host']) 
+                                            && ($dbs[0]['name'] !== $aDb['default']['database'])
+                                            && ($dbs[0]['user'] !== $aDb['default']['username'])
+                                            && ($dbs[0]['pass'] !== $aDb['default']['password'])
+                                        ) {
+                                            ++ $j;
+                                            $dbs[$j]['host'] = $aDb['default']['host'];
+                                            $dbs[$j]['name'] = $aDb['default']['database'];
+                                            $dbs[$j]['user'] = $aDb['default']['username'];
+                                            $dbs[$j]['pass'] = $aDb['default']['password'];
+                                        } else {
+                                            echo '/* Skipped db settings because the same already exists. */' . PHP_EOL;
+                                        }
+                                    }
+                                } else {
+                                    echo '/* Databases: ' . var_export($databases, 1) . ' */';
+                                }
+                                //
+                            }
+                        }    
+                    } else {
+                        echo '/* Problems with reading multisite configuration */';
+                    }
                 }
                 if (strlen($dbs[0]['name']) > 0 && strlen($dbs[0]['user']) > 0 && strlen($dbs[0]['pass']) > 0) {
                     $disPlayResults = 1;    
