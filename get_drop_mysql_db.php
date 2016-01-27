@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Detect popular CMS MySQL database settings and output set up DB and User script
+ * Detect popular CMS MySQL database settings and output delete DB and User script
  *
  * PHP version 5
  *
