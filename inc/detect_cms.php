@@ -21,16 +21,16 @@ if (file_exists($configFile)) {
     $numConfigLines = count($fileLines);
     if ($numConfigLines > 0) {
         foreach ($fileLines as $line1) {
-            if (preg_match("/define\('DB_HOST', '(.+)'\);/m", $line1, $m3)) {
+            if (preg_match("/define\(\s*?'DB_HOST', '(.+)'\s*?\);/m", $line1, $m3)) {
                 $dbs[0]['host'] = $m3[1];
             }
-            if (preg_match("/define\('DB_NAME', '(.+)'\);/m", $line1, $m1)) {
+            if (preg_match("/define\(\s*?'DB_NAME', '(.+)'\s*?\);/m", $line1, $m1)) {
                 $dbs[0]['name'] = $m1[1];
             }
-            if (preg_match("/define\('DB_USER', '(.+)'\);/m", $line1, $m2)) {
+            if (preg_match("/define\(\s*?'DB_USER', '(.+)'\s*?\);/m", $line1, $m2)) {
                 $dbs[0]['user'] = $m2[1];
             }
-            if (preg_match("/define\('DB_PASSWORD', '(.+)'\);/m", $line1, $m3)) {
+            if (preg_match("/define\(\s*?'DB_PASSWORD', '(.+)'\s*?\);/m", $line1, $m3)) {
                 $dbs[0]['pass'] = $m3[1];
             }
         }
