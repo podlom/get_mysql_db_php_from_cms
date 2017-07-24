@@ -1,7 +1,10 @@
 # get_mysql_db_php_from_cms
 
-Get create MySQL database(s) & user(s) SQL script from popular CMS such as Wordpress, Drupal, Joomla! & Magento
-Let me know If you want to add more.
+Possible usage for: DevOps automation, backups sripting and much more.
+
+Get create MySQL database(s) & user(s) SQL script from popular CMS such as Wordpress, Drupal, Joomla!, Magento, Yii2 Framework both advanced & basic application templates.
+
+Please, let me know If you want to add some more missing CMS and Frameworks written on PHP.
 
 Usage:
 ```
@@ -12,7 +15,7 @@ Get drop MySQL database(s) & user(s) SQL script.
 
 Usage:
 ```
-$ php get_create_mysql_db.php /home/taras/public_html
+$ php get_drop_mysql_db.php /home/taras/public_html
 ```
 
 Generate .my.cnf configuration file from MySQL settings to use instead of credentials.

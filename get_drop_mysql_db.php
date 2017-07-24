@@ -19,9 +19,9 @@ $dirName = '';
  *
  * @return void
  */
-function plmUsage() 
+function plmUsage()
 {
-    echo "Script usage: php -f " . __FILE__ . " '/path/to/folder'" . PHP_EOL;
+    echo "Script usage: php " . __FILE__ . " '" . DIRECTORY_SEPARATOR . "path" . DIRECTORY_SEPARATOR . "to" . DIRECTORY_SEPARATOR . "folder'" . PHP_EOL;
 }
 
 if (isset($argv[1])) {
@@ -29,14 +29,12 @@ if (isset($argv[1])) {
         $dirName = $argv[1];
     } else {
         plmUsage();
-        exit;
+        return 2;
     }
 } else {
     plmUsage();
-    exit;
+    return 3;
 }
-
-echo 'Checking directory: ' . $dirName . PHP_EOL;
 
 $disPlayResults = 0;
 $dbs[0] = array(
@@ -45,6 +43,10 @@ $dbs[0] = array(
     'user' => '',
     'pass' => '',
 );
+$commentStart = '/*';
+$commentEnd = '*/';
+
+echo $commentStart . ' Checking directory: ' . $dirName . ' ' . $commentEnd . PHP_EOL;
 
 require_once 'inc' . DIRECTORY_SEPARATOR . 'detect_cms.php';
 
@@ -61,11 +63,9 @@ if ($numDbs > 1) {
 }
 $msgTemplate =<<<EOM
 
-/*
-
+{$commentStart}
 {$sHead}
-
-*/
+{$commentEnd}
 
 {$sSql}
 FLUSH PRIVILEGES;
@@ -74,6 +74,8 @@ EOM;
 
 if (1 == $disPlayResults) {
     echo $msgTemplate . PHP_EOL;
+    return 0;
 } else {
-    echo 'Can`t generate SQL for this application type;' . PHP_EOL;
+    echo $commentStart . ' Error: can`t generate SQL for this application type ' . $commentEnd . PHP_EOL;
+    return 1;
 }

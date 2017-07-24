@@ -12,7 +12,7 @@
  * @link     http://www.shkodenko.com/
  */
 
-global $dbs, $disPlayResults;
+global $dbs, $disPlayResults, $commentStart, $commentEnd;
 
 $configFile = $dirName . DIRECTORY_SEPARATOR . 'wp-config.php';
 if (file_exists($configFile)) {
@@ -40,11 +40,11 @@ if (file_exists($configFile)) {
     ) {
         $versionFile = $dirName . DIRECTORY_SEPARATOR . '/wp-includes/version.php';
         include_once $versionFile;
-        echo '/* Detected WordPress CMS version '  . $wp_version . ' */' . PHP_EOL;
+        echo $commentStart . ' Detected WordPress CMS version '  . $wp_version . ' ' . $commentEnd . PHP_EOL;
         $disPlayResults = 1;
     }
 } else {
-    // Drupal ?
+    // Drupal CMF ?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/default/settings.php';
     if (file_exists($configFile)) {
         include_once $configFile;
@@ -53,7 +53,6 @@ if (file_exists($configFile)) {
             // Drupal 6 ?
             echo '/* Detected Drupal 6 */' . PHP_EOL;
             $ap1 = parse_url($db_url);
-            // echo 'Parsed URL: ' . var_export($ap1, 1) . PHP_EOL;
             $dbs[0]['host'] = $ap1['host'];
             $dbs[0]['name'] = substr($ap1['path'], 1);
             $dbs[0]['user'] = $ap1['user'];
@@ -66,7 +65,7 @@ if (file_exists($configFile)) {
         } else {
             if (isset($databases)) {
                 // Drupal 7+ ?
-                echo '/* Detected Drupal 7+ */' . PHP_EOL;
+                echo $commentStart . ' Detected Drupal 7+ ' . ' ' . $commentEnd . PHP_EOL;
                 if (count($databases > 0)) {
                     $i = 0;
                     foreach ($databases as $aDb) {
@@ -85,15 +84,14 @@ if (file_exists($configFile)) {
                 $multisiteConfig = $dirName . DIRECTORY_SEPARATOR . 'sites/sites.php';
                 if (file_exists($multisiteConfig)) {
                     include_once $multisiteConfig;
-                    echo '/* Loaded Drupal multisite config file ' . $multisiteConfig . ' */' . PHP_EOL;
+                    echo $commentStart . ' Loaded Drupal multisite config file ' . $multisiteConfig . ' ' . $commentEnd . PHP_EOL;
                     if (is_array($sites) && (count($sites) > 0)) {
                         $j = 0;
                         foreach ($sites as $domain => $configFolder) {
                             $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/' . $configFolder . '/settings.php';
                             if (file_exists($configFile)) {
                                 include_once $configFile;
-                                echo '/* Loaded config file ' . $configFile . ' for (sub)domain ' . $domain . ' */' . PHP_EOL;
-                                //
+                                echo $commentStart . ' Loaded config file ' . $configFile . ' for (sub)domain ' . $domain . ' ' . $commentEnd . PHP_EOL;
                                 if (count($databases > 0)) {
                                     foreach ($databases as $aDb) {
                                         if (($dbs[0]['host'] !== $aDb['default']['host'])
@@ -107,17 +105,16 @@ if (file_exists($configFile)) {
                                             $dbs[$j]['user'] = $aDb['default']['username'];
                                             $dbs[$j]['pass'] = $aDb['default']['password'];
                                         } else {
-                                            echo '/* Skipped db settings because the same already exists. */' . PHP_EOL;
+                                            echo $commentStart . ' Skipped db settings because the same already exists. ' . $commentEnd . PHP_EOL;
                                         }
                                     }
                                 } else {
-                                    echo '/* Databases: ' . var_export($databases, 1) . ' */';
+                                    echo $commentStart . ' Databases: ' . var_export($databases, 1) . ' ' . $commentEnd . PHP_EOL;
                                 }
-                                //
                             }
                         }
                     } else {
-                        echo '/* Problems with reading multisite configuration */';
+                        echo $commentStart . ' Problems with reading multisite configuration ' . $commentEnd . PHP_EOL;
                     }
                 }
                 if (strlen($dbs[0]['name']) > 0
@@ -131,7 +128,7 @@ if (file_exists($configFile)) {
     // Yii 2+ Framework basic application template?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.php';
     if (file_exists($configFile)) {
-        echo '/* Yii 2+ Framework basic application template DB config: ' . $configFile . ' */' . PHP_EOL;
+        echo $commentStart . ' Yii 2+ Framework basic application template DB config: ' . $configFile . ' ' . $commentEnd . PHP_EOL;
         $dbParams = require $configFile;
         if (isset($dbParams['dsn'])) {
             $p1 = explode(':', $dbParams['dsn']);
@@ -160,14 +157,14 @@ if (file_exists($configFile)) {
                     }
                 }
             } else {
-                echo 'Can`t generate script for non-MySQL database: ' . $p1[0] . PHP_EOL;
+                echo $commentStart . ' Error: can`t generate script for non-MySQL database: ' . $p1[0] . ' ' . $commentEnd . PHP_EOL;
             }
         }
     }
     // Yii 2+ Framework basic advanced template?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'main-local.php';
     if (file_exists($configFile)) {
-        echo '/* Yii 2+ Framework advanced application template DB config: ' . $configFile . ' */' . PHP_EOL;
+        echo $commentStart . ' Yii 2+ Framework advanced application template DB config: ' . $configFile . ' ' . $commentEnd . PHP_EOL;
         $dbParams = require $configFile;
         if (isset($dbParams['components']['db']['dsn'])) {
             $p1 = explode(':', $dbParams['components']['db']['dsn']);
@@ -196,7 +193,7 @@ if (file_exists($configFile)) {
                     }
                 }
             } else {
-                echo 'Can`t generate script for non-MySQL database: ' . $p1[0] . PHP_EOL;
+                echo $commentStart . ' Error: can`t generate script for non-MySQL database: ' . $p1[0] . ' ' . $commentEnd . PHP_EOL;
             }
         }
     }
@@ -204,7 +201,6 @@ if (file_exists($configFile)) {
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'configuration.php';
     if (file_exists($configFile)) {
         include_once $configFile;
-        // Joomla!
         $jc1 = new JConfig;
         $version = $versionTxt = '';
         $verFile = $dirName . DIRECTORY_SEPARATOR . 'libraries/cms/version/version.php';
@@ -217,8 +213,7 @@ if (file_exists($configFile)) {
         if (strlen($version) > 0) {
             $versionTxt = 'version: ' . $version;
         }
-        echo '/* Detected Joomla! CMS ' . $versionTxt . ' */' . PHP_EOL;
-        //
+        echo $commentStart . ' Detected Joomla! CMS ' . $versionTxt . ' ' . $commentEnd . PHP_EOL;
         $dbs[0]['host'] = $jc1->host;
         $dbs[0]['name'] = $jc1->db;
         $dbs[0]['user'] = $jc1->user;
@@ -235,7 +230,7 @@ if (file_exists($configFile)) {
         if (!function_exists('simplexml_load_file')) {
             echo 'Error: can`t work without simplexml_load_file function.' .
                 ' Please install SimpleXml support in PHP.' . PHP_EOL;
-            exit;
+            return 4;
         }
         $xmlConfig = simplexml_load_file($configFile);
         $conn = $xmlConfig->global->resources->default_setup->connection;
@@ -243,13 +238,11 @@ if (file_exists($configFile)) {
         $dbs[0]['name'] = (string) $conn->dbname;
         $dbs[0]['user'] = (string) $conn->username;
         $dbs[0]['pass'] = (string) $conn->password;
-        //
         if (strlen($dbs[0]['name']) > 0
             && strlen($dbs[0]['user']) > 0
         ) {
             $disPlayResults = 1;
         }
-        //
         $verFile = $dirName . DIRECTORY_SEPARATOR . 'app/Mage.php';
         if (file_exists($verFile)) {
             include_once $verFile;
@@ -258,7 +251,7 @@ if (file_exists($configFile)) {
             if (strlen($version) > 0) {
                 $versionTxt = 'version: ' . $version;
             }
-            echo '/* Detected Magento ' . $versionTxt . ' */' . PHP_EOL;
+            echo $commentStart . ' Detected Magento ' . $versionTxt . ' ' . $commentEnd . PHP_EOL;
         }
     }
 }
