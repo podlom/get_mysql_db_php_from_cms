@@ -55,6 +55,10 @@ if ($disPlayResults == 1) {
     $msgTemplate =<<<EOM
 #
 # Example usage in mysql, mysqldump parameter: --defaults-file=.my.cnf
+# to make backup run command:
+# $ mysqldump --defaults-file=.my.cnf {$dbs[0]['name']} > {$dbs[0]['name']}.sql
+# to restore database from backup run command:
+# $ mysql --defaults-file=.my.cnf {$dbs[0]['name']} < {$dbs[0]['name']}.sql 
 # Save output below as .my.cnf file and run command: chmod -v 600 .my.cnf
 #
 [client]
