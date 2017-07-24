@@ -37,7 +37,6 @@ if (file_exists($configFile)) {
     }
     if (strlen($dbs[0]['name']) > 0
         && strlen($dbs[0]['user']) > 0
-        && strlen($dbs[0]['pass']) > 0
     ) {
         $versionFile = $dirName . DIRECTORY_SEPARATOR . '/wp-includes/version.php';
         include_once $versionFile;
@@ -61,14 +60,13 @@ if (file_exists($configFile)) {
             $dbs[0]['pass'] = $ap1['pass'];
             if (strlen($dbs[0]['name']) > 0
                 && strlen($dbs[0]['user']) > 0
-                && strlen($dbs[0]['pass']) > 0
             ) {
                 $disPlayResults = 1;
             }
         } else {
             if (isset($databases)) {
                 // Drupal 7+ ?
-                echo '/* Detected Drupal 7 */' . PHP_EOL;
+                echo '/* Detected Drupal 7+ */' . PHP_EOL;
                 if (count($databases > 0)) {
                     $i = 0;
                     foreach ($databases as $aDb) {
@@ -124,10 +122,81 @@ if (file_exists($configFile)) {
                 }
                 if (strlen($dbs[0]['name']) > 0
                     && strlen($dbs[0]['user']) > 0
-                    && strlen($dbs[0]['pass']) > 0
                 ) {
                     $disPlayResults = 1;
                 }
+            }
+        }
+    }
+    // Yii 2+ Framework basic application template?
+    $configFile = $dirName . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.php';
+    if (file_exists($configFile)) {
+        echo '/* Yii 2+ Framework basic application template DB config: ' . $configFile . ' */' . PHP_EOL;
+        $dbParams = require $configFile;
+        if (isset($dbParams['dsn'])) {
+            $p1 = explode(':', $dbParams['dsn']);
+            if ($p1[0] == 'mysql') {
+                $p2 = explode(';', $p1[1]);
+                if (count($p2) == 2) {
+                    $p3 = explode('=', $p2[0]);
+                    if ($p3[0] == 'host') {
+                        $dbs[0]['host'] = $p3[1];
+                    } elseif ($p3[0] == 'dbname') {
+                        $dbs[0]['name'] = $p3[1];
+                    }
+                    $p4 = explode('=', $p2[1]);
+                    if ($p4[0] == 'dbname') {
+                        $dbs[0]['name'] = $p4[1];
+                    } elseif ($p4[0] == 'host') {
+                        $dbs[0]['host'] = $p4[1];
+                    }
+                    $dbs[0]['user'] = $dbParams['username'];
+                    $dbs[0]['pass'] = $dbParams['password'];
+                    if (strlen($dbs[0]['host']) > 0
+                        && strlen($dbs[0]['name']) > 0
+                        && strlen($dbs[0]['user']) > 0
+                    ) {
+                        $disPlayResults = 1;
+                    }
+                }
+            } else {
+                echo 'Can`t generate script for non-MySQL database: ' . $p1[0] . PHP_EOL;
+            }
+        }
+    }
+    // Yii 2+ Framework basic advanced template?
+    $configFile = $dirName . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'main-local.php';
+    if (file_exists($configFile)) {
+        echo '/* Yii 2+ Framework advanced application template DB config: ' . $configFile . ' */' . PHP_EOL;
+        $dbParams = require $configFile;
+        if (isset($dbParams['components']['db']['dsn'])) {
+            $p1 = explode(':', $dbParams['components']['db']['dsn']);
+            if ($p1[0] == 'mysql') {
+                $p2 = explode(';', $p1[1]);
+                if (count($p2) == 2) {
+                    $p3 = explode('=', $p2[0]);
+                    if ($p3[0] == 'host') {
+                        $dbs[0]['host'] = $p3[1];
+                    } elseif ($p3[0] == 'dbname') {
+                        $dbs[0]['name'] = $p3[1];
+                    }
+                    $p4 = explode('=', $p2[1]);
+                    if ($p4[0] == 'dbname') {
+                        $dbs[0]['name'] = $p4[1];
+                    } elseif ($p4[0] == 'host') {
+                        $dbs[0]['host'] = $p4[1];
+                    }
+                    $dbs[0]['user'] = $dbParams['components']['db']['username'];
+                    $dbs[0]['pass'] = $dbParams['components']['db']['password'];
+                    if (strlen($dbs[0]['host']) > 0
+                        && strlen($dbs[0]['name']) > 0
+                        && strlen($dbs[0]['user']) > 0
+                    ) {
+                        $disPlayResults = 1;
+                    }
+                }
+            } else {
+                echo 'Can`t generate script for non-MySQL database: ' . $p1[0] . PHP_EOL;
             }
         }
     }
@@ -156,7 +225,6 @@ if (file_exists($configFile)) {
         $dbs[0]['pass'] = $jc1->password;
         if (strlen($dbs[0]['name']) > 0
             && strlen($dbs[0]['user']) > 0
-            && strlen($dbs[0]['pass']) > 0
         ) {
             $disPlayResults = 1;
         }
@@ -178,7 +246,6 @@ if (file_exists($configFile)) {
         //
         if (strlen($dbs[0]['name']) > 0
             && strlen($dbs[0]['user']) > 0
-            && strlen($dbs[0]['pass']) > 0
         ) {
             $disPlayResults = 1;
         }

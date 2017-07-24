@@ -57,7 +57,7 @@ foreach ($dbs as $db) {
 }
 $sHead = 'Drop database & user SQL script is:';
 if ($numDbs > 1) {
-    $sHead = 'Drop databases & users SQL script is:';
+    $sHead = 'Drop databases & users SQL scripts are:';
 }
 $msgTemplate =<<<EOM
 
