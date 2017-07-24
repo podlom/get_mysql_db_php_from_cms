@@ -38,14 +38,14 @@ if (file_exists($configFile)) {
     if (strlen($dbs[0]['name']) > 0
         && strlen($dbs[0]['user']) > 0
     ) {
-        $versionFile = $dirName . DIRECTORY_SEPARATOR . '/wp-includes/version.php';
+        $versionFile = $dirName . DIRECTORY_SEPARATOR . 'wp-includes' . DIRECTORY_SEPARATOR . 'version.php';
         include_once $versionFile;
         echo $commentStart . ' Detected WordPress CMS version '  . $wp_version . ' ' . $commentEnd . PHP_EOL;
         $disPlayResults = 1;
     }
 } else {
     // Drupal CMF ?
-    $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/default/settings.php';
+    $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'settings.php';
     if (file_exists($configFile)) {
         include_once $configFile;
         echo '/* Loaded default config file ' . $configFile . ' */' . PHP_EOL;
@@ -81,14 +81,14 @@ if (file_exists($configFile)) {
                     $dbs[0]['user'] = $databases['default']['default']['username'];
                     $dbs[0]['pass'] = $databases['default']['default']['password'];
                 }
-                $multisiteConfig = $dirName . DIRECTORY_SEPARATOR . 'sites/sites.php';
+                $multisiteConfig = $dirName . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'sites.php';
                 if (file_exists($multisiteConfig)) {
                     include_once $multisiteConfig;
                     echo $commentStart . ' Loaded Drupal multisite config file ' . $multisiteConfig . ' ' . $commentEnd . PHP_EOL;
                     if (is_array($sites) && (count($sites) > 0)) {
                         $j = 0;
                         foreach ($sites as $domain => $configFolder) {
-                            $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites/' . $configFolder . '/settings.php';
+                            $configFile = $dirName . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . $configFolder . DIRECTORY_SEPARATOR . 'settings.php';
                             if (file_exists($configFile)) {
                                 include_once $configFile;
                                 echo $commentStart . ' Loaded config file ' . $configFile . ' for (sub)domain ' . $domain . ' ' . $commentEnd . PHP_EOL;
@@ -203,7 +203,7 @@ if (file_exists($configFile)) {
         include_once $configFile;
         $jc1 = new JConfig;
         $version = $versionTxt = '';
-        $verFile = $dirName . DIRECTORY_SEPARATOR . 'libraries/cms/version/version.php';
+        $verFile = $dirName . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . 'version' . DIRECTORY_SEPARATOR . 'version.php';
         if (file_exists($verFile)) {
             define('_JEXEC', 1);
             include_once $verFile;
@@ -225,7 +225,7 @@ if (file_exists($configFile)) {
         }
     }
     // Magento ?
-    $configFile = $dirName . DIRECTORY_SEPARATOR . 'app/etc/local.xml';
+    $configFile = $dirName . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'local.xml';
     if (file_exists($configFile)) {
         if (!function_exists('simplexml_load_file')) {
             echo 'Error: can`t work without simplexml_load_file function.' .
@@ -243,7 +243,7 @@ if (file_exists($configFile)) {
         ) {
             $disPlayResults = 1;
         }
-        $verFile = $dirName . DIRECTORY_SEPARATOR . 'app/Mage.php';
+        $verFile = $dirName . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Mage.php';
         if (file_exists($verFile)) {
             include_once $verFile;
             $version = Mage::getVersion();
