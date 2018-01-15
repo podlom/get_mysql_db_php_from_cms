@@ -14,6 +14,7 @@
 
 global $dbs, $disPlayResults, $commentStart, $commentEnd;
 
+
 $configFile = $dirName . DIRECTORY_SEPARATOR . 'wp-config.php';
 if (file_exists($configFile)) {
     // WordPress CMS ?
@@ -125,7 +126,7 @@ if (file_exists($configFile)) {
             }
         }
     }
-    // Yii 2+ Framework basic application template?
+    // Yii 2+ Framework basic application template ?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.php';
     if (file_exists($configFile)) {
         echo $commentStart . ' Yii 2+ Framework basic application template DB config: ' . $configFile . ' ' . $commentEnd . PHP_EOL;
@@ -161,7 +162,7 @@ if (file_exists($configFile)) {
             }
         }
     }
-    // Yii 2+ Framework basic advanced template?
+    // Yii 2+ Framework advanced template ?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'main-local.php';
     if (file_exists($configFile)) {
         echo $commentStart . ' Yii 2+ Framework advanced application template DB config: ' . $configFile . ' ' . $commentEnd . PHP_EOL;
@@ -197,7 +198,7 @@ if (file_exists($configFile)) {
             }
         }
     }
-    // Joomla! CMS?
+    // Joomla! CMS ?
     $configFile = $dirName . DIRECTORY_SEPARATOR . 'configuration.php';
     if (file_exists($configFile)) {
         include_once $configFile;
