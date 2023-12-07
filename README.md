@@ -24,3 +24,6 @@ Usage:
 ```
 $ php get_create_my_cnf.php /home/taras/public_html
 ```
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/L3L5LJ3TB)
